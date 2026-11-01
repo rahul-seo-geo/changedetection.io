@@ -51,7 +51,7 @@ class WatchSession:
         self.posts = 0
 
     def get(self, url, **kwargs):
-        if url.endswith('/tag'):
+        if url.endswith('/tags'):
             return Response({'tag-1': {'title': 'dealhound:SSD'}})
         if url.endswith('/watch'):
             return Response(self.watches)
