@@ -11,17 +11,44 @@ from . import dedupe, discord_alert
 
 logger = logging.getLogger(__name__)
 PRICE = re.compile(r'\$\s?\d[\d,]*(?:\.\d{1,2})?')
+DELIVERY_KEYWORDS = re.compile(r'\b(delivery|delivered|shipping|ship|postage|post|freight|deliv)\b', re.IGNORECASE)
 BASE_FEED = 'https://www.ozbargain.com.au/deals/feed'
 USER_AGENT = 'dealhound/0.1 (+personal price watcher)'
 
 
 def parse_price(title):
-    match = PRICE.search(title)
-    return float(match.group().replace('$', '').replace(',', '').strip()) if match else None
+    matches = list(PRICE.finditer(title))
+    if not matches:
+        return None
+    prices_info = []
+    for m in matches:
+        val_str = m.group().replace('$', '').replace(',', '').strip()
+        try:
+            val = float(val_str)
+        except ValueError:
+            continue
+        start, end = m.span()
+        context_start = max(0, start - 15)
+        context_end = min(len(title), end + 15)
+        context = title[context_start:context_end]
+        has_delivery = bool(DELIVERY_KEYWORDS.search(context))
+        prices_info.append((val, has_delivery))
+    if not prices_info:
+        return None
+    for val, has_delivery in prices_info:
+        if not has_delivery:
+            return val
+    return prices_info[0][0]
 
 
 def matches(title, keywords):
-    return any(re.search(r'(?<!\w)' + re.escape(word) + r'(?!\w)', title, re.IGNORECASE) for word in keywords)
+    for word in keywords:
+        end_is_digit = word[-1].isdigit()
+        suffix = r'(?!\d)\w*' if end_is_digit else r'\w*'
+        pattern = r'(?<!\w)' + re.escape(word) + suffix + r'(?!\w)'
+        if re.search(pattern, title, re.IGNORECASE):
+            return True
+    return False
 
 
 def feed_urls(items):
@@ -36,6 +63,19 @@ def ingest(items, config, session=None, now=None, send=None):
     db = dedupe.connect(config['data_dir'])
     created = 0
     try:
+        # Re-send unalerted rows on each cycle (at-least-once)
+        unalerted = db.execute('SELECT hash, link, title, price, matched_item FROM deals WHERE alerted=0').fetchall()
+        for row in unalerted:
+            digest, link, title, price, matched_item = row
+            candidate = {'hash': digest, 'link': link, 'title': title, 'price': price,
+                         'matched_item': matched_item, 'target_price': 0, 'feed_source': 'retry', 'ts': now}
+            try:
+                if not config['webhook'] or send(candidate, config['webhook']):
+                    with db:
+                        db.execute('UPDATE deals SET alerted=1 WHERE hash=?', (digest,))
+            except requests.RequestException:
+                logger.exception('Unalerted deal redelivery failed')
+
         for url in feed_urls(items):
             row = db.execute('SELECT etag, modified, checked FROM feeds WHERE url=?', (url,)).fetchone()
             if row and now - row[2] < 300:
@@ -69,13 +109,15 @@ def ingest(items, config, session=None, now=None, send=None):
                         candidate = {'hash': digest, 'link': link, 'title': title, 'price': price,
                                      'matched_item': item['name'], 'target_price': item['target_price'],
                                      'feed_source': url, 'ts': now}
-                        with (config['data_dir'] / 'candidates.jsonl').open('a', encoding='utf-8') as out:
-                            out.write(json.dumps(candidate, ensure_ascii=False) + '\n')
                         created += 1
                         try:
-                            send(candidate, config['webhook'])
+                            if not config['webhook'] or send(candidate, config['webhook']):
+                                # Mark alerted=1 ONLY after successful alert send (H1)
+                                # Crash between send and mark = possible duplicate alert — acceptable
+                                with db:
+                                    db.execute('UPDATE deals SET alerted=1 WHERE hash=?', (digest,))
                         except requests.RequestException:
-                            logger.exception('Discord delivery failed')
+                            logger.exception('Discord delivery failed; leaving unalerted for retry')
             except requests.RequestException:
                 logger.exception('Feed polling failed')
     finally:

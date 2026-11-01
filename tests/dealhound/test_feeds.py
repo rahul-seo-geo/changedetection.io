@@ -37,11 +37,11 @@ def test_synthetic_entry_alert_once(tmp_path):
     alerts = []
     def capture(candidate, webhook):
         alerts.append(candidate)
+        return True
     assert feeds.ingest([item], config, session=FeedSession(), now=1000, send=capture) == 1
     assert feeds.ingest([item], config, session=FeedSession(), now=1400, send=capture) == 0
     assert len(alerts) == 1
     assert alerts[0]['price'] == 199
-    assert len((tmp_path / 'candidates.jsonl').read_text().splitlines()) == 1
 
 
 class WatchSession:

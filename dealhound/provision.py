@@ -27,16 +27,27 @@ def provision(items, config, session=None):
         if not item['enabled'] or not item['target_price']:
             continue
         tag = 'dealhound:' + item['name']
-        for url in item['urls']:
+        for url_entry in item['urls']:
+            url = url_entry if isinstance(url_entry, str) else url_entry['url']
+            if isinstance(url_entry, dict):
+                if 'css' in url_entry:
+                    filters = [url_entry['css']] if isinstance(url_entry['css'], str) else url_entry['css']
+                elif 'xpath' in url_entry:
+                    filters = [url_entry['xpath']] if isinstance(url_entry['xpath'], str) else url_entry['xpath']
+                elif 'json_path' in url_entry:
+                    filters = [url_entry['json_path']] if isinstance(url_entry['json_path'], str) else url_entry['json_path']
+                else:
+                    filters = ['#corePrice_feature_div .a-offscreen', '.priceToPay .a-offscreen', '[itemprop="price"]']
+            else:
+                filters = ['#corePrice_feature_div .a-offscreen', '.priceToPay .a-offscreen', '[itemprop="price"]']
+
             matches = [(uuid, watch) for uuid, watch in watches.items() if watch['url'] == url and tag in tags and tags[tag] in watch.get('tags', [])]
             if len(matches) > 1:
                 raise ValueError('Duplicate Dealhound watches for ' + item['name'])
-            # restock_diff extracts structured product price and applies its native below-price trigger.
-            # The include filter is a CSS selector for the displayed price, where available.
             desired = {
                 'url': url, 'title': tag, 'tag': tag,
                 'processor': 'restock_diff',
-                'include_filters': ['[itemprop="price"]'],
+                'include_filters': filters,
                 'processor_config_restock_diff': {
                     'in_stock_processing': 'off', 'follow_price_changes': True,
                     'price_change_min': item['target_price'],

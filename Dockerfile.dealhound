@@ -3,6 +3,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir feedparser httpx requests
 COPY dealhound/ /app/dealhound/
 COPY watchlist/ /app/watchlist/
+RUN chmod +x /app/dealhound/entrypoint.sh
 ENV PYTHONUNBUFFERED=1 DEALHOUND_DATA_DIR=/data
 VOLUME /data
-CMD ["/bin/sh", "-c", "python -m dealhound.cli provision; while true; do python -m dealhound.cli ingest; python -m dealhound.cli judge; sleep 600; python -m dealhound.cli ingest; sleep 600; python -m dealhound.cli ingest; python -m dealhound.cli judge; sleep 600; done"]
+ENTRYPOINT ["/app/dealhound/entrypoint.sh"]
