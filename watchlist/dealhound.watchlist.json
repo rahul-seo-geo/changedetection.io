@@ -1,0 +1,10 @@
+[
+  {"name":"Samsung 990 Pro 2TB","keywords":["990 Pro 2TB"],"urls":[],"target_price":220,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["ssd"]},
+  {"name":"Samsung 990 Pro 4TB","keywords":["990 Pro 4TB"],"urls":[],"target_price":400,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["ssd"]},
+  {"name":"AMD Ryzen 7 7800X3D","keywords":["7800X3D"],"urls":[],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["cpu","pc-parts"]},
+  {"name":"B650 motherboard","keywords":["B650"],"urls":[],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["pc-parts"]},
+  {"name":"Logitech MX Master 3S","keywords":["MX Master 3S"],"urls":[],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["logitech"]},
+  {"name":"Sony WH-1000XM5","keywords":["WH-1000XM5"],"urls":[],"target_price":380,"category":"audio","currency":"AUD","enabled":true,"ozbargain_tags":[]},
+  {"name":"Dyson V15","keywords":["Dyson V15"],"urls":[],"target_price":0,"category":"appliances","currency":"AUD","enabled":true,"ozbargain_tags":["dyson"]},
+  {"name":"Weekly supermarket specials","keywords":["Coles","Woolworths"],"urls":[],"target_price":0,"category":"groceries","currency":"AUD","enabled":true,"ozbargain_tags":["coles","woolworths"]}
+]
