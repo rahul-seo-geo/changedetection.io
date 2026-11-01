@@ -18,7 +18,7 @@ def provision(items, config, session=None):
     response = session.get(base, headers=headers, timeout=20)
     response.raise_for_status()
     watches = response.json()
-    tags_response = session.get(config['base_url'] + '/api/v1/tag', headers=headers, timeout=20)
+    tags_response = session.get(config['base_url'] + '/api/v1/tags', headers=headers, timeout=20)
     tags_response.raise_for_status()
     tags = {value['title']: uuid for uuid, value in tags_response.json().items()}
     notification = [apprise_url(config['webhook'])] if config['webhook'] else []
