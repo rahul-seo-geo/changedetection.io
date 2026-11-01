@@ -10,5 +10,5 @@ def settings():
         'data_dir': Path(os.getenv('DEALHOUND_DATA_DIR', './data')),
         'clef_base_url': os.getenv('CLEF_BASE_URL', '').rstrip('/'),
         'clef_api_key': os.getenv('CLEF_API_KEY', ''),
-        'judge_model': os.getenv('DEALHOUND_JUDGE_MODEL', 'omniroute/coding-free'),
+        'judge_model': os.getenv('DEALHOUND_JUDGE_MODEL', 'auto/cheap'),
     }
