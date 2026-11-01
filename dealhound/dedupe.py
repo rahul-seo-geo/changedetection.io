@@ -17,6 +17,7 @@ def connect(data_dir):
     except sqlite3.OperationalError:
         pass
     db.execute('CREATE TABLE IF NOT EXISTS feeds (url TEXT PRIMARY KEY, etag TEXT, modified TEXT, checked REAL)')
+    db.execute('CREATE TABLE IF NOT EXISTS price_state (watch_uuid TEXT PRIMARY KEY, last_alerted REAL)')
     db.commit()
     return db
 

@@ -2,7 +2,7 @@ import argparse
 import logging
 import time
 
-from . import config, feeds, judge, manifest, provision
+from . import config, feeds, judge, manifest, prices, provision
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,11 @@ def loop(settings, items):
             logger.info(f'Judged {judged} candidates')
         except Exception:
             logger.exception('Error during judge')
+        try:
+            price_alerts = prices.check(settings, items)
+            logger.info(f'Price alerts sent: {price_alerts}')
+        except Exception:
+            logger.exception('Error during price check')
         time.sleep(600)
 
 
