@@ -14,13 +14,16 @@ class Response:
 
 
 class PriceSession:
-    def __init__(self, watches, versions):
+    def __init__(self, watches, versions, tags=None):
         self.watches = watches
         self.versions = versions
+        self.tags = tags or {}
 
     def get(self, url, **kwargs):
         if url.endswith('/api/v1/watch'):
             return Response(self.watches)
+        if url.endswith('/api/v1/tags'):
+            return Response(self.tags)
         if url.endswith('/history'):
             uuid = url.split('/')[-2]
             return Response([str(ts) for ts in self.versions[uuid]])
@@ -95,4 +98,13 @@ def test_target_from_tag(tmp_path):
     sent = []
     assert prices.check(make_config(tmp_path), [], session=session, send=capture(sent)) == 1
     assert sent[0]['matched_item'] == 'https://example.com/990'
+    assert sent[0]['target_price'] == 600
+
+
+def test_target_resolved_from_tag_uuid(tmp_path):
+    watch = {'title': '990 Pro chat-added', 'url': 'https://example.com/990', 'tags': ['tag-uuid-9']}
+    tags = {'tag-uuid-9': {'title': 'dealhound-target:600'}}
+    session = PriceSession({'watch-9': watch}, {'watch-9': {1690000000: '$579.99'}}, tags=tags)
+    sent = []
+    assert prices.check(make_config(tmp_path), [], session=session, send=capture(sent)) == 1
     assert sent[0]['target_price'] == 600

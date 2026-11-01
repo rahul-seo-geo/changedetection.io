@@ -18,14 +18,14 @@ def parse_price(text):
     return float(match.group(0).replace('$', '').replace(',', '').strip())
 
 
-def target_for(watch, target_prices):
+def target_for(watch, target_prices, tag_titles=None):
     title = str(watch.get('title') or '')
     if title.startswith('dealhound:'):
         name = title[len('dealhound:'):]
         if name in target_prices and target_prices[name]:
             return target_prices[name]
     for tag in watch.get('tags') or []:
-        match = TARGET_TAG.match(str(tag))
+        match = TARGET_TAG.match((tag_titles or {}).get(str(tag), str(tag)))
         if match:
             return float(match.group(1))
     return None
@@ -61,15 +61,18 @@ def check(config, items=None, session=None, send=None):
     headers = {'x-api-key': config['api_key']}
     listing = session.get(base + '/api/v1/watch', headers=headers, timeout=20)
     listing.raise_for_status()
+    tags_response = session.get(base + '/api/v1/tags', headers=headers, timeout=20)
+    tags_response.raise_for_status()
+    tag_titles = {uuid: value.get('title') for uuid, value in tags_response.json().items()}
     watches = {uuid: watch for uuid, watch in listing.json().items()
                if str(watch.get('title') or '').startswith('dealhound:')
-               or any(TARGET_TAG.match(str(t)) for t in (watch.get('tags') or []))}
+               or any(TARGET_TAG.match(tag_titles.get(str(t), str(t))) for t in (watch.get('tags') or []))}
 
     db = dedupe.connect(config['data_dir'])
     alerted = 0
     try:
         for uuid, watch in watches.items():
-            target = target_for(watch, target_prices)
+            target = target_for(watch, target_prices, tag_titles)
             if not target:
                 continue
             try:
