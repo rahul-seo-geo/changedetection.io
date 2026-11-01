@@ -1,10 +1,10 @@
 [
-  {"name":"Samsung 990 Pro 2TB","keywords":["990 Pro 2TB"],"urls":[],"target_price":220,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["ssd"]},
-  {"name":"Samsung 990 Pro 4TB","keywords":["990 Pro 4TB"],"urls":[],"target_price":400,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["ssd"]},
-  {"name":"AMD Ryzen 7 7800X3D","keywords":["7800X3D"],"urls":[],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["cpu","pc-parts"]},
+  {"name":"Samsung 990 Pro 2TB","keywords":["990 Pro 2TB"],"urls":["https://www.amazon.com.au/Internal-Expansion-Graphics-MZ-V9P2T0B-AM/dp/B0BHJJ9Y77"],"target_price":220,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["ssd"]},
+  {"name":"Samsung 990 Pro 4TB","keywords":["990 Pro 4TB"],"urls":["https://www.amazon.com.au/dp/B0CHGT1KFJ"],"target_price":400,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["ssd"]},
+  {"name":"AMD Ryzen 7 7800X3D","keywords":["7800X3D"],"urls":["https://www.amazon.com.au/AMD-Ryzen-7800X3D-Raphael-Processor/dp/B0BTZB7F88"],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["cpu","pc-parts"]},
   {"name":"B650 motherboard","keywords":["B650"],"urls":[],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["pc-parts"]},
-  {"name":"Logitech MX Master 3S","keywords":["MX Master 3S"],"urls":[],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["logitech"]},
-  {"name":"Sony WH-1000XM5","keywords":["WH-1000XM5"],"urls":[],"target_price":380,"category":"audio","currency":"AUD","enabled":true,"ozbargain_tags":[]},
-  {"name":"Dyson V15","keywords":["Dyson V15"],"urls":[],"target_price":0,"category":"appliances","currency":"AUD","enabled":true,"ozbargain_tags":["dyson"]},
+  {"name":"Logitech MX Master 3S","keywords":["MX Master 3S"],"urls":["https://www.amazon.com.au/Logitech-Master-Bluetooth-Performance-Ultra-Fast/dp/B0FNV6GP6K"],"target_price":0,"category":"pc-parts","currency":"AUD","enabled":true,"ozbargain_tags":["logitech"]},
+  {"name":"Sony WH-1000XM5","keywords":["WH-1000XM5"],"urls":["https://www.amazon.com.au/Sony-WH-1000XM5-Canceling-Wireless-Headphones/dp/B0CFSZ4ZRF"],"target_price":380,"category":"audio","currency":"AUD","enabled":true,"ozbargain_tags":["sony"]},
+  {"name":"Dyson V15","keywords":["Dyson V15"],"urls":["https://www.amazon.com.au/Dyson-V15-DetectTM-Absolute-Cordless/dp/B0D7MNCXXF/"],"target_price":0,"category":"appliances","currency":"AUD","enabled":true,"ozbargain_tags":["dyson"]},
   {"name":"Weekly supermarket specials","keywords":["Coles","Woolworths"],"urls":[],"target_price":0,"category":"groceries","currency":"AUD","enabled":true,"ozbargain_tags":["coles","woolworths"]}
 ]
