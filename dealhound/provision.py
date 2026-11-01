@@ -48,6 +48,8 @@ def provision(items, config, session=None):
                 'url': url, 'title': tag, 'tag': tag,
                 'processor': 'restock_diff',
                 'include_filters': filters,
+                'headers': {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+                            'Accept-Language': 'en-AU,en;q=0.9'},
                 'processor_config_restock_diff': {
                     'in_stock_processing': 'off', 'follow_price_changes': True,
                     'price_change_min': item['target_price'],
